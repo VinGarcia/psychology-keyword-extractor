@@ -1,4 +1,4 @@
-# psychology-keyword-extraction
+# Psychology Keyword Extraction
 
 Required packages:
 
