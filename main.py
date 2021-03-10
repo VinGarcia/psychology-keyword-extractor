@@ -1,6 +1,7 @@
 import nbib
-import json
-import RAKE
+
+import strategies.rake as rake
+import strategies.tfidf as tfidf
 
 refs = nbib.read_file('./pubmed-relational-set.nbib')
 print("number of refs before dedup:", len(refs))
@@ -36,40 +37,5 @@ documents = [ {
     'keywords': item.get('keywords', ''),
 } for item in refs ]
 
-rake = RAKE.Rake('stopwords')
-
-doc = documents[0]
-
-def top10(docs, globalKeywords, numTopKeywords = 20, minTokens=3, defaultKeywordScore=5, factor=3):
-    keywordsDict = {}
-    for doc in docs:
-        # TODO(vinicius.garcia): We should differentiate the keywords from the rest of the text
-        # since they are likely more important than the rest since they were selected by humans.
-        keywords = rake.run('%s\n%s' % (doc['title'], doc['abstract']))
-        for kw, weight in keywords:
-            if kw.count(" ") < minTokens-1: continue
-            if kw in keywordsDict:
-                keywordsDict[kw] += weight * factor
-            else:
-                keywordsDict[kw] = weight * factor
-
-        for kw in doc['keywords']:
-            if kw in keywordsDict:
-                keywordsDict[kw] += defaultKeywordScore
-            else:
-                keywordsDict[kw] = defaultKeywordScore
-
-    for kw in globalKeywords:
-        if kw in keywordsDict:
-            keywordsDict[kw] += defaultKeywordScore
-        else:
-            keywordsDict[kw] = defaultKeywordScore
-
-    keywords = list(keywordsDict.items())
-    keywords.sort(key = lambda x : -x[1])
-
-    return keywords[:numTopKeywords]
-
-topKeywords = top10(documents, globalKeywords, 30)
-print(topKeywords)
-
+# print(strategies.rake.keywordExtraction(documents, globalKeywords))
+print(tfidf.keywordExtraction(documents, globalKeywords))
