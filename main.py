@@ -2,6 +2,7 @@ import nbib
 
 import strategies.rake as rake
 import strategies.tfidf as tfidf
+import strategies.textrank as textrank
 
 refs = nbib.read_file('./pubmed-relational-set.nbib')
 print("number of refs before dedup:", len(refs))
@@ -37,5 +38,6 @@ documents = [ {
     'keywords': item.get('keywords', ''),
 } for item in refs ]
 
-# print(strategies.rake.keywordExtraction(documents, globalKeywords))
-print(tfidf.keywordExtraction(documents, globalKeywords))
+print("rake:", rake.keywordExtraction(documents, globalKeywords))
+print("tfidf:", tfidf.keywordExtraction(documents, globalKeywords))
+print("textrank:", textrank.keywordExtraction(documents, globalKeywords))

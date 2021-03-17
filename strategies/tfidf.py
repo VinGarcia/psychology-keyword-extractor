@@ -7,7 +7,7 @@ def keywordExtraction(documents, globalKeywords):
     topKeywords = top10(tfidfVectorized, documents, globalKeywords, 30)
     return topKeywords
 
-def top10(tfidf, docs, globalKeywords, numTopKeywords = 20, minTokens=3, defaultKeywordScore=5, factor=3):
+def top10(tfidf, docs, globalKeywords, numTopKeywords = 20, minTokens=3, defaultKeywordScore=0, factor=3):
     dataset = ['%s\n%s\n%s' % (doc['title'], doc['abstract'], doc['keywords']) for doc in docs]
     model = tfidf.fit_transform(dataset)
     df = pd.DataFrame(model[0].T.todense(), index=tfidf.get_feature_names(), columns=["TF-IDF"])
