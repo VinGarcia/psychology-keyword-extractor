@@ -1,11 +1,7 @@
 
 from gensim.summarization import keywords as textrankKeywords
 
-def keywordExtraction(documents, globalKeywords):
-    topKeywords = top10(documents, globalKeywords, 30)
-    return topKeywords
-
-def top10(docs, globalKeywords, numTopKeywords = 20, minTokens=2, defaultKeywordScore=0, factor=3):
+def keywordExtraction(docs, globalKeywords, minTokens=2, defaultKeywordScore=0, factor=1):
     keywordsDict = {}
     for doc in docs:
         content = '%s\n%s' % (doc['title'], doc['abstract'])
@@ -17,21 +13,21 @@ def top10(docs, globalKeywords, numTopKeywords = 20, minTokens=2, defaultKeyword
             else:
                 keywordsDict[kw] = factor
 
-        for kw in doc['keywords']:
-            kw = kw.lower()
-            if kw in keywordsDict:
-                keywordsDict[kw] += defaultKeywordScore
-            else:
-                keywordsDict[kw] = defaultKeywordScore
-
-    for kw in globalKeywords:
-        kw = kw.lower()
-        if kw in keywordsDict:
-            keywordsDict[kw] += defaultKeywordScore
-        else:
-            keywordsDict[kw] = defaultKeywordScore
+        # for kw in doc['keywords']:
+            # kw = kw.lower()
+            # if kw in keywordsDict:
+                # keywordsDict[kw] += defaultKeywordScore
+            # else:
+                # keywordsDict[kw] = defaultKeywordScore
+#
+    # for kw in globalKeywords:
+        # kw = kw.lower()
+        # if kw in keywordsDict:
+            # keywordsDict[kw] += defaultKeywordScore
+        # else:
+            # keywordsDict[kw] = defaultKeywordScore
 
     keywords = list(keywordsDict.items())
     keywords.sort(key = lambda x : -x[1])
 
-    return keywords[:numTopKeywords]
+    return keywords
