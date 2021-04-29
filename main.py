@@ -56,16 +56,30 @@ rake_result = [x[0] for x in rake.keywordExtraction(documents, globalKeywords, k
 tfidf_result = [x[0] for x in tfidf.keywordExtraction(documents, globalKeywords, keywords)]
 textrank_result = [x[0] for x in textrank.keywordExtraction(documents, globalKeywords, keywords)]
 
+def half(l):
+    return l[:int(len(l)/2)]
+
 # print('t' in rake_result)
 # print(rake_result)
-# print(tfidf_result)
+# print(tfidf_result[:30])
 # print(textrank_result)
 # exit(0)
 
-rake_result = set(rake_result)
-tfidf_result = set(tfidf_result)
-textrank_result = set(textrank_result)
+counter = {}
+for r in half(rake_result) + half(textrank_result) + half(tfidf_result):
+    counter[r] = counter.get(r, 0) + 1
+
+sortedItems = list(counter.items())
+sortedItems.sort(key = lambda x : x[1])
+sortedItems = [item for item in sortedItems if item[1] > 1]
+print(sortedItems)
+
+rake_result = set(half(rake_result))
+tfidf_result = set(half(tfidf_result))
+textrank_result = set(half(textrank_result))
 
 print("rake vs tfidf:", rake_result.intersection(tfidf_result))
 print("rake vs textrank:", rake_result.intersection(textrank_result))
 print("tfidf vs textrank:", tfidf_result.intersection(textrank_result))
+
+print("full intersection:", tfidf_result.intersection(textrank_result).intersection(rake_result))
