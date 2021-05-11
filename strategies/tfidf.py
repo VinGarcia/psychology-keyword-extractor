@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer as v
 stopwords = [word.strip() for word in open('stopwords').readlines()]
 
 def keywordExtraction(docs, globalKeywords, minTokens=2, defaultKeywordScore=0, factor=1):
-    tfidf = v(use_idf=True, stop_words='english')
+    tfidf = v(use_idf=True, stop_words=stopwords)
 
     dataset = ['%s\n%s' % (doc['title'], doc['abstract']) for doc in docs]
     tfidf.ngram_range = (2,2)
