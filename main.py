@@ -98,31 +98,62 @@ for word in matrix:
 # Calculate the strength of each word
 # based on the number of other words that are
 # present in the same documents as it.
-strengths = []
+scores = []
 for word in words:
-    strength = 0
+    score = 0
     for i in range(len(matrix[word])):
         if matrix[word][i]:
-            strength += wordsInDoc[i] - 1
-    strengths.append((word, strength))
+            score += wordsInDoc[i] - 1
+    scores.append((word, score))
 
-filteredStrengths = set(strengths)
-for (word1, strength) in strengths:
-    for (word2, _) in strengths:
-        if word1 != word2 and word2.startswith(word1):
-            if word1 not in filteredStrengths: continue
-            filteredStrengths.remove((word1, strength))
+scores.sort(key = lambda x : -x[1])
 
-strengths = list(filteredStrengths)
+# filteredScores = set(scores)
+# for (word1, score1) in scores:
+    # for (word2, score2) in scores:
+        # if word1 != word2 and word1 in word2 and word2.count(" ") > word1.count(" "):
+            # if (word1, score1) not in filteredScores: continue
+            # print("removed '%s'\n because of '%s'" % (word1, word2))
+            # filteredScores.remove((word1, score1))
 
-print("strengths", strengths[:20])
+selected = set()
+for (w, s) in scores:
+    shouldChange = False
+    shouldAdd = True
+    replaceW, replaceS = "", 0
+    for (selectedW, selectedS) in selected:
+        if w in selectedW:
+            shouldAdd = False
+            break
+        if selectedW in w:
+            shouldChange = True
+            replaceW, replaceS = selectedW, selectedS
+            break
 
-strengths.sort(key = lambda x : -x[1])
+    if not shouldAdd: continue
 
-print("strengths", strengths[:20])
+    if shouldChange:
+        print("should change '%s' for '%s'" % (selectedW, w))
+        selected.remove((replaceW, replaceS))
+        selected.add((w, s))
+        continue
 
-with open('strengths.json', 'w') as f:
-    f.write(json.dumps(strengths))
+    print("adding '%s' %d" % (w, s))
+    selected.add((w, s))
+    if len(selected) == 19: break
+
+
+scores = list(selected)
+scores.sort(key = lambda x : -x[1])
+
+print(len(scores))
+
+scores.sort(key = lambda x : -x[1])
+
+print("scores", scores[:20])
+
+with open('scores.json', 'w') as f:
+    f.write(json.dumps(scores))
 
 # print("rake vs tfidf:", rake_result.intersection(tfidf_result))
 # print("rake vs textrank:", rake_result.intersection(textrank_result))

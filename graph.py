@@ -3,7 +3,7 @@ import json
 
 from matplotlib import pyplot as plt
 
-with open('strengths.json') as f:
+with open('scores.json') as f:
     strengths = json.load(f)[:20]
 
 strengths.reverse()
@@ -17,7 +17,7 @@ graph = fig.add_subplot(111)
 
 # Plot the data as a black line with round markers
 # graph.bar(x,y)
-graph.plot(x, y, 'b-o')
+graph.plot(x, y, 'k-o')
 
 # Set the xtick locations to correspond to just the dates you entered.
 graph.set_xticks(x)
@@ -30,9 +30,9 @@ graph.set_xticklabels(
 )
 
 for i in range(len(strengths)):
-    plt.text(x[i], y[i], strengths[i][0], color='black', rotation=60)
+    plt.text(x[i], y[i], ' ' + strengths[i][0], color='black', rotation=45)
 
-plt.margins(0.14)
+# plt.margins(0.14)
 plt.subplots_adjust(bottom=0.25)
 
 plt.show()
