@@ -120,27 +120,27 @@ selected = set()
 for (w, s) in scores:
     shouldChange = False
     shouldAdd = True
-    replaceW, replaceS = "", 0
+    toRemove = []
     for (selectedW, selectedS) in selected:
         if w in selectedW:
             shouldAdd = False
             break
         if selectedW in w:
             shouldChange = True
-            replaceW, replaceS = selectedW, selectedS
-            break
+            toRemove.append((selectedW, selectedS))
 
     if not shouldAdd: continue
 
     if shouldChange:
-        print("should change '%s' for '%s'" % (selectedW, w))
-        selected.remove((replaceW, replaceS))
+        for (replaceW, replaceS) in toRemove:
+            print("removing '%s' for inserting '%s'" % (replaceW, w))
+            selected.remove((replaceW, replaceS))
         selected.add((w, s))
         continue
 
     print("adding '%s' %d" % (w, s))
     selected.add((w, s))
-    if len(selected) == 19: break
+    if len(selected) == 20: break
 
 
 scores = list(selected)
